@@ -606,6 +606,10 @@ public class ArgProcessor extends AbstractProcessor {
 
           jw.emitEmptyLine();
           writeBuildSubclassMethod(jw, fragmentClass);
+
+          jw.emitEmptyLine();
+          writeArgumentBuildMethod(jw);
+
           jw.endType();
           jw.close();
 
@@ -770,6 +774,16 @@ public class ArgProcessor extends AbstractProcessor {
         EnumSet.of(Modifier.PUBLIC), supportAnnotations ? "@NonNull F" : "F", "fragment");
     jw.emitStatement("fragment.setArguments(mArguments)");
     jw.emitStatement("return fragment");
+    jw.endMethod();
+  }
+
+  private void writeArgumentBuildMethod(JavaWriter jw) throws IOException {
+    if (supportAnnotations) {
+      jw.emitAnnotation("NonNull");
+    }
+
+    jw.beginMethod("Bundle", "buildArguments", EnumSet.of(Modifier.PUBLIC));
+    jw.emitStatement("return new Bundle(mArguments)");
     jw.endMethod();
   }
 
