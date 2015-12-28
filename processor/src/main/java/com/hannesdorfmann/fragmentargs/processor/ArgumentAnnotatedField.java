@@ -6,6 +6,7 @@ import com.hannesdorfmann.fragmentargs.bundler.NoneArgsBundler;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Locale;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -193,6 +194,11 @@ public class ArgumentAnnotatedField implements Comparable<ArgumentAnnotatedField
 
   public String getVariableName() {
     return getVariableName(name);
+  }
+
+  public String getConstantName(){
+    // convert CamelCase to ARG_CAMEL_CASE
+    return "ARG_" + getVariableName().replaceAll("([^_A-Z])([A-Z])", "$1_$2").toUpperCase(Locale.US);
   }
 
   public static String getVariableName(String name) {

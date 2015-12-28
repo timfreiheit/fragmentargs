@@ -556,6 +556,11 @@ public class ArgProcessor extends AbstractProcessor {
 
           jw.beginType(builder, "class", EnumSet.of(Modifier.PUBLIC, Modifier.FINAL));
 
+          jw.emitEmptyLine();
+          for (ArgumentAnnotatedField arg : fragment.getAll()) {
+            writeVariableKeyConstant(jw, arg);
+          }
+
           if (!fragment.getBundlerVariableMap().isEmpty()) {
             jw.emitEmptyLine();
             for (Map.Entry<String, String> e : fragment.getBundlerVariableMap().entrySet()) {
@@ -752,6 +757,16 @@ public class ArgProcessor extends AbstractProcessor {
     }
     jw.emitStatement("return new %1$s(%2$s).build()", builder, argNames);
     jw.endMethod();
+  }
+
+  /**
+   * writes a static final field for an used field
+   * for example:
+   * public static final String ARG_ARGUMENT_NAME = "argumentName"
+   */
+  private void writeVariableKeyConstant(JavaWriter jw, ArgumentAnnotatedField arg) throws IOException {
+    jw.emitField("String", arg.getConstantName(), EnumSet.of(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL),
+            "\"" + arg.getVariableName() + "\"");
   }
 
   private void writeBuildMethod(JavaWriter jw, TypeElement element) throws IOException {
